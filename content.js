@@ -4,7 +4,7 @@
   const MAX_RATE = 16;
 
   function getVideo() {
-    return document.querySelector('.html5-main-video');
+    return document.querySelector('.html5-main-video') || document.querySelector('video');
   }
 
   function clamp(value, min, max) {
