@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Bracket Speed",
+  "version": "1.0.0",
+  "description": "Use [ and ] to adjust YouTube playback speed in 0.1 increments.",
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
