@@ -15,6 +15,15 @@
     return Math.round(value * 10) / 10;
   }
 
+  function isEditableTarget(target) {
+    if (!(target instanceof HTMLElement)) {
+      return false;
+    }
+
+    const tag = target.tagName.toLowerCase();
+    return target.isContentEditable || tag === 'input' || tag === 'textarea' || tag === 'select';
+  }
+
   function updatePlaybackRate(delta) {
     const video = getVideo();
     if (!video) {
@@ -23,26 +32,29 @@
 
     const nextRate = clamp(roundToTenths(video.playbackRate + delta), MIN_RATE, MAX_RATE);
     video.playbackRate = nextRate;
-
-    if (typeof unsafeWindow !== 'undefined' && typeof unsafeWindow?.showToast === 'function') {
-      unsafeWindow.showToast(`Playback speed: ${nextRate.toFixed(1)}x`);
-    }
   }
 
-  window.addEventListener('keydown', (event) => {
-    const target = event.target;
-    if (target instanceof HTMLElement) {
-      const tag = target.tagName.toLowerCase();
-      const isEditable = target.isContentEditable || tag === 'input' || tag === 'textarea' || tag === 'select';
-      if (isEditable) {
+  window.addEventListener(
+    'keydown',
+    (event) => {
+      if (event.defaultPrevented || event.repeat || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
         return;
       }
-    }
 
-    if (event.key === '[') {
-      updatePlaybackRate(-STEP);
-    } else if (event.key === ']') {
-      updatePlaybackRate(STEP);
-    }
-  });
+      if (isEditableTarget(event.target)) {
+        return;
+      }
+
+      if (event.key === '[') {
+        event.preventDefault();
+        event.stopPropagation();
+        updatePlaybackRate(-STEP);
+      } else if (event.key === ']') {
+        event.preventDefault();
+        event.stopPropagation();
+        updatePlaybackRate(STEP);
+      }
+    },
+    true,
+  );
 })();

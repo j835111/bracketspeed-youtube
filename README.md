@@ -17,3 +17,4 @@ A simple Chrome extension that lets you adjust YouTube playback speed with keybo
 - Works on `https://www.youtube.com/*`
 - Playback speed is clamped between `0.1x` and `16.0x`
 - Shortcut is ignored when typing in inputs/textareas/editable fields
+- Uses capture-phase key handling and `preventDefault()` to avoid conflicting with YouTube's native hotkeys
